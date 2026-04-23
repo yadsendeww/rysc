@@ -63,6 +63,47 @@ A DeFi application similar to Rysk Finance, implementing 5 strategies with a cen
 - Implement the "Request Withdrawal" flow.
 - Build the "Claim" mechanism (Triggering MM's Fireblocks outbox).
 
+## System Architecture
+
+### 0. Workflow Diagram
+```mermaid
+sequenceDiagram
+    participant U as User (Frontend)
+    participant W as Social Wallet (MPC)
+    participant B as Backend (RFQ Engine)
+    participant MM as Market Maker API
+    participant FB as MM Fireblocks (Omnibus)
+    participant C as Chain (Arbitrum/Base)
+
+    Note over U, FB: Phase 1: Onboarding & Deposit
+    U->>W: Login via Social (Dynamic/Web3Auth)
+    W-->>U: Wallet Address Generated
+    U->>C: Transfer Funds to MM Omnibus Address
+    C-->>FB: Funds Received
+    FB-->>B: Webhook: Deposit Confirmed
+    B->>B: Update Internal Ledger (User Balance)
+
+    Note over U, MM: Phase 2: RFQ & Execution
+    U->>B: Select Strategy (e.g., Covered Call)
+    B->>MM: Request Quote (Instrument, Size, Expiry)
+    MM-->>B: Return Quote (APY, Yield, Strike)
+    B-->>U: Display Quote (30s Timer)
+    U->>B: Accept Quote
+    B->>B: Lock Internal Balance
+    B->>MM: Execute Strategy Command
+
+    Note over U, FB: Phase 3: Expiration & Withdrawal
+    MM->>B: Notify Expiry (Principal + Yield)
+    B->>B: Update Internal Ledger (Available Balance)
+    U->>B: Request Withdrawal
+    B->>MM: Signal Withdrawal Approval
+    U->>B: Click "Claim"
+    B->>MM: Trigger Disbursement
+    MM->>FB: Initiate Transaction
+    FB->>C: Transfer to User Social Wallet
+    C-->>W: Funds Arrive
+```
+
 ### 1. User Authentication & Wallet
 - **Provider:** **Dynamic** (Recommended by Fireblocks) or **Web3Auth/Privy**.
 - **Social Wallet:** When a user logs in via social, a non-custodial wallet (MPC) is created for them.
