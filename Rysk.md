@@ -106,6 +106,23 @@ sequenceDiagram
     C-->>W: Funds Distributed to User Social Wallet
 ```
 
+#### Workflow Explanation:
+1.  **Phase 1 (Onboarding & Deposit):** 
+    - Users authenticate using social accounts via **Dynamic** (which orchestrates the Fireblocks Non-Custodial Wallet creation). 
+    - To fund their account, users transfer assets from their social wallet to the **Market Maker's (MM) Omnibus Address**. 
+    - The backend detects this deposit via Fireblocks webhooks and updates the internal database ledger to reflect the user's "Virtual Balance."
+
+2.  **Phase 2 (RFQ & Execution):** 
+    - When a user selects a strategy (e.g., Covered Call), the App requests a live quote from the **MM's API**. 
+    - The MM returns specific parameters (APY, Strike Price, etc.). 
+    - If the user accepts within the 30-second window, the backend locks the user's virtual balance and sends an execution command to the MM to open the position.
+
+3.  **Phase 3 (Expiration & Withdrawal):** 
+    - Upon position expiry, the MM notifies the backend, which unlocks the principal plus any yield in the user's virtual balance.
+    - If a user requests a withdrawal, the MM performs a manual/automated review for risk compliance. 
+    - Once approved, the MM moves funds into a **Claim Smart Contract (Escrow)**. 
+    - The user then "claims" these funds by submitting a cryptographically signed voucher (provided by the App backend) to the Smart Contract, which then transfers the funds directly to the user's social wallet.
+
 ### 1. User Authentication & Wallet
 - **Provider:** **Dynamic** (Recommended by Fireblocks) or **Web3Auth/Privy**.
 - **Social Wallet:** When a user logs in via social, a non-custodial wallet (MPC) is created for them.
