@@ -96,12 +96,14 @@ sequenceDiagram
     MM->>B: Notify Expiry (Principal + Yield)
     B->>B: Update Internal Ledger (Available Balance)
     U->>B: Request Withdrawal
-    B->>MM: Signal Withdrawal Approval
+    B->>MM: Signal Withdrawal Request
+    MM->>MM: Review & Approve
+    MM->>C: Move Funds to Claim SC (Escrow)
+    B-->>U: Status: Claimable
     U->>B: Click "Claim"
-    B->>MM: Trigger Disbursement
-    MM->>FB: Initiate Transaction
-    FB->>C: Transfer to User Social Wallet
-    C-->>W: Funds Arrive
+    B->>U: Provide Signed Voucher
+    U->>C: Submit Voucher to Claim SC
+    C-->>W: Funds Distributed to User Social Wallet
 ```
 
 ### 1. User Authentication & Wallet
@@ -138,8 +140,16 @@ sequenceDiagram
 
 ### 5. Withdrawal & Claim Flow
 1. **Withdrawal Request:** User initiates a request in the App.
-2. **MM Processing:** The request is sent to the MM API. The MM ensures liquidity is available (e.g., after position settlement).
-3. **Claiming:** 
-    - Once approved by the MM, the status in the App changes to "Claimable".
+2. **MM Review & Approval:** 
+    - The request is sent to the MM API. 
+    - MM reviews (checks for margin, settlement, and fraud).
+    - MM approves the request.
+3. **Escrow Funding:** 
+    - Upon approval, the MM moves the requested funds from their **Omnibus Vault** to the **App's Escrow Wallet** (held in Fireblocks) or directly to a **Claim Smart Contract**.
+    - *Safety Recommendation:* Using a **Claim Smart Contract** is safer for the end-user as it provides public transparency and programmatic assurance that funds are available for them.
+4. **Claiming:** 
+    - The App notifies the user that funds are "Claimable".
     - User clicks "Claim".
-    - **Execution:** The MM triggers a Fireblocks transaction from their Omnibus vault to the user's destination wallet (provided during the claim or stored in profile).
+    - **Execution:** 
+        - If using a **Claim Smart Contract**: The App backend provides a cryptographically signed voucher (via Fireblocks) which the user submits to the SC to pull their funds.
+        - If using an **Escrow Wallet**: The App backend triggers a Fireblocks transaction from the Escrow wallet to the user's social wallet.

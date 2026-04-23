@@ -30,10 +30,12 @@ sequenceDiagram
     MM->>B: Notify Expiry (Principal + Yield)
     B->>B: Update Internal Ledger (Available Balance)
     U->>B: Request Withdrawal
-    B->>MM: Signal Withdrawal Approval
+    B->>MM: Signal Withdrawal Request
+    MM->>MM: Review & Approve
+    MM->>C: Move Funds to Claim SC (Escrow)
+    B-->>U: Status: Claimable
     U->>B: Click "Claim"
-    B->>MM: Trigger Disbursement
-    MM->>FB: Initiate Transaction
-    FB->>C: Transfer to User Social Wallet
-    C-->>W: Funds Arrive
+    B->>U: Provide Signed Voucher
+    U->>C: Submit Voucher to Claim SC
+    C-->>W: Funds Distributed to User Social Wallet
 ```
