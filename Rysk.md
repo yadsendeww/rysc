@@ -38,10 +38,10 @@ A DeFi application similar to Rysk Finance, implementing 5 strategies with a cen
 | :--- | :--- | :--- |
 | **Auth & Wallet** | **Dynamic** | Native Fireblocks integration, best-in-class social onboarding. |
 | **Custody** | **Fireblocks Omnibus** | High security, gas efficient for retail, MM-friendly. |
-| **Frontend** | **Next.js + Tailwind** | Rapid development, SEO friendly, modern UI components. |
-| **Backend** | **NestJS (Node.js)** | Strong typing, modular, great for API integrations (MM, Fireblocks). |
-| **Database** | **PostgreSQL** | Reliable source of truth for the internal ledger. |
-| **Blockchain** | **Arbitrum / Base** | Low fees, high liquidity for the underlying assets (WETH, USDC). |
+| **Frontend** | **Next.js + Tailwind** | Rapid development, modern UI, seamless integration with Next API routes. |
+| **Backend** | **Next.js (API Routes)** | **Unified Setup:** Shared types, single deployment pipeline, and minimal overhead for orchestration logic. |
+| **Database** | **PostgreSQL** | Reliable source of truth for the internal ledger (use Prisma/Drizzle for Type-safety). |
+| **Blockchain** | **Arbitrum / Base** | Low fees, high liquidity for underlying assets (WETH, USDC). |
 
 ## Implementation Roadmap
 
