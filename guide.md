@@ -37,14 +37,13 @@ Replace the Mermaid block with:
 ```
 
 ## 5. Install the Python libraries needed to build a Word document
+Use `Pandoc` to turn the Markdown into a Word document, then open that `.docx` in Google Docs.
+
+Then run:
 
 ```bash
-python3 -m pip install --user python-docx pillow
+pandoc Rysk.docs.md -o Rysk.docx --resource-path=.
 ```
-
-## 6. Generate the `.docx`
-
-Run a Python script that reads `Rysk.docs.md` and writes `Rysk.docx`.
 
 ## 7. Verify the output
 
