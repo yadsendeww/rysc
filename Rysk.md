@@ -30,7 +30,7 @@ A DeFi application similar to Rysk Finance, implementing 5 strategies with a cen
     2. **Cash-Secured Put (USDC):** Hold stables, earn yield by committing to buy at a lower price. MM provides the bid for the put.
     3. **Iron Condor:** A neutral strategy using both calls and puts. Best for sideways markets.
     4. **Yield Maximizer (Lending + Options):** Principal stays in Aave, yield is used to buy OTM options (lottery ticket style).
-    5. **Managed Volatility (DHV):** User pools funds; the MM dynamically hedges to target a specific delta/gamma profile (reproducing Rysk's core product).
+    5. **Managed Volatility (DHV):** User pools funds; the MM dynamically hedges to target a specific delta/gamma profile   (reproducing Rysk's core product).
 
 ## Proposed Tech Stack
 
